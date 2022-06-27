@@ -1,106 +1,116 @@
+let id = 1;
 let state = {
-    todos: [
-      {
-        text: 'Go Shopping',
-        completed: false,
-      },
-      {
-        text: 'Work out',
-        completed: false,
-      },
-      {
-        text: 'See the doctor',
-        completed: true,
-      },
-      {
-        text: 'Learn Js',
-        completed:true
-      },
-    ],
-    showCompleted: true,
-  }
-  
-  function renderApp() {
-    let appEl = document.createElement('div')
-    appEl.className = 'app'
-    document.body.append(appEl)
-  }
-  
-  function renderOptionsSection() {
+  todos: [
+    
+  ],
 
-   // <section class="options">
-  // <h2 class="sec-title">Options</h2>
-  // <label>
-  //     Show Completed
-  //     <input type="checkbox" />
-  // </label>
-// </section>
+  show_completed: true,
+};
 
-    let optionsSection = document.createElement('section')
-    optionsSection.className = ('options')
-  
-    let optionsTitle = document.createElement('h2')
-    optionsTitle.className = ('sec-title')
-    optionsTitle.innerText = 'Options'
-  
-    let showCompletedLabel = document.createElement('label')
-  
-    let showCompletedInput = document.createElement('input')
-    showCompletedInput.type = 'checkbox'
-  
-    showCompletedLabel.append('Show completed', showCompletedInput)
-    optionsSection.append(optionsTitle, showCompletedLabel)
-  
-    let appEl = document.querySelector('.app')
-    appEl?.append(optionsSection)
-  }
-  
-  function renderAddTodoSection() {
-    //     <section class="add-item">
-    //       <h2 class="sec-title">Add Item</h2>
-    //       <form>
-    //         <input type="text" />
-    //         <button>Add</button>
-    //       </form>
-    //     </section>
-  }
-  
- 
-  function renderCompletedTodosSection() {
-    //     <section>
-    //       <h2 class="sec-title">Completed</h2>
-    //       <ul class="completed-todo-list">
-    //         <li class="todo completed">
-    //           <input type="checkbox" checked />
-    //           <p>See the doctor</p>
-    //           <button>Delete</button>
-    //         </li>
-    //       </ul>
-    //     </section>
+function createTodo() {
+  state.todos.unshift({
+    id: id,
+    text: document.add_form.text.value,
+    completed: false,
+  });
 
-    let section =document.createElement("section")
-    let titleEl = document.createElement('h2')
-    titleEl.className = "sec-title"
-    titleEl.textContent = "Completed"
+  id++;
 
-    let ul = document.createElement("ul")
-    ul.className = "completed-todo-list"
-     
-    section.appendChild(titleEl,ul)
+  renderTodos();
+}
 
+function deleteTodo(e) {
+  state.todos = state.todos.filter(
+    (state) => state.id != e.currentTarget.parentNode.parentNode.id
+  );
 
-  } 
-  
-  function render() {
-    document.body.textContent = ''
+  renderTodos();
+}
 
-    renderApp()
-    renderOptionsSection()
+function completeTodo(e) {
+  let index = state.todos.findIndex(
+    (todo) => todo.id == e.target.parentNode.parentNode.id
+  );
+
+  if (e.currentTarget.checked) {
+    state.todos[index].completed = true;
+  } else {
+    state.todos[index].completed = false;
   }
 
-  render()
+  renderTodos();
+}
 
-  function toggleShowCompleted() {
-    state.showCompleted = !state.showCompleted
-    render()
+function renderTodos() {
+  render(getInCompletedTodos(), ".todo-list");
+  render(getCompletedTodos(), ".completed-list");
+}
+
+function render(todos, listClass) {
+  let list = document.querySelector(listClass);
+  list.innerHTML = "";
+
+  for (let todo of todos) {
+    let li = document.createElement("li");
+    li.id = todo.id;
+    if (todo.completed) {
+      li.className = "todo completed";
+    } else {
+      li.className = "todo";
+    }
+
+    let completedSection = document.createElement("div");
+    completedSection.className = "completed-section";
+
+    let checkbox = document.createElement("input");
+    checkbox.className = "completed-checkbox";
+    checkbox.type = "checkbox";
+    if (todo.completed) {
+      checkbox.checked = true;
+    }
+    checkbox.addEventListener("change", (e) => completeTodo(e));
+
+    completedSection.append(checkbox);
+
+    let textSection = document.createElement("div");
+    textSection.className = "text-section";
+
+    let pText = document.createElement("p");
+    pText.className = "text";
+    pText.textContent = todo.text;
+    textSection.append(pText);
+
+    let buttonSection = document.createElement("div");
+    buttonSection.className = "button-section";
+
+    let deleteButton = document.createElement("button");
+    deleteButton.className = "delete";
+    deleteButton.textContent = "Delete";
+
+    deleteButton.addEventListener("click", (e) => deleteTodo(e));
+    buttonSection.append(deleteButton);
+
+    li.append(completedSection, textSection, buttonSection);
+
+    list.appendChild(li);
+    document.add_form.text.value = "";
   }
+}
+
+function getCompletedTodos() {
+  return state.todos.filter((todo) => todo.completed === true);
+}
+
+function getInCompletedTodos() {
+  return state.todos.filter((todo) => todo.completed === false);
+}
+
+function toggleCompletedSection(e) {
+  let el = document.getElementsByTagName("section")[3];
+
+  if (e.currentTarget.checked) {
+    el.style.display = "block";
+  } else {
+    el.style.display = "none";
+  }
+}

@@ -7,57 +7,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="style.css">
-    <script defer src="/index.js"></script>
+    <script defer src="index.js"></script>
 </head>
 
 <body>
-    <div class="app">
-        <section class="options">
-            <h2 class="sec-title">Options</h2>
+    <main>
+        <section>
+            <h2 class="title">OPTIONS</h2>
             <label>
-                Show Completed
-                <input type="checkbox" />
+                Show completed
+                <input type="checkbox" checked onchange="toggleCompletedSection(event)" />
             </label>
         </section>
-
-
-        <section class="add-item">
-            <h2 class="sec-title"> Add item </h2>
-            <form>
-                <input type="text" />
-                <button>Add</button>
+        <section>
+            <h2 class="title">ADD ITEM</h2>
+            <form name="add_form" class="add-item">
+                <input class="text-input" type="text" name="text" required minlength="3" />
+                <button type="button" onclick="createTodo()">Add</button>
             </form>
         </section>
-
-
         <section>
-            <h2 class="sec-title">Todo</h2>
-            <ul class="copmleted-todo-list">
-                <li class="todo">
-                    <input type="checkbox" />
-                    <p> Go Shopping</p>
-                    <button>Delete</button>
-                </li>
-                <li class="todo">
-                    <input type="checkbox" />
-                    <p> Work out</p>
-                    <button>Delete</button>
-                </li>
-            </ul>
+            <h2 class="title">TODO</h2>
+            <ul class="todo-list"></ul>
         </section>
-
-
         <section>
-            <h2 class="sec-title">Completed</h2>
-            <ul class="copmleted-todo-list">
-                <li class="todo completed">
-                    <input type="checkbox" checked />
-                    <p> See Doctor</p>
-                    <button>Delete</button>
-                </li>
-            </ul>   
+            <h2 class="title">COMPLETED</h2>
+            <ul class="completed-list"></ul>
         </section>
-    </div>
+    </main>
 
 </body>
 
